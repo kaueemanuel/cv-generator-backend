@@ -1,13 +1,16 @@
 import { Router } from 'express';
+import cvGenerator from './cvGenerate';
 
 const routes = Router();
 
-routes.get('/', (request, response) => {
+routes.get('/api', (request, response) => {
   response.json({ message: 'Hello World!' });
 });
-routes.post('/', (request, response) => {
+routes.post('/api', (request, response) => {
   const { name } = request.body;
   response.json({ name });
 });
+
+routes.use('/api/cv', cvGenerator);
 
 export default routes;
