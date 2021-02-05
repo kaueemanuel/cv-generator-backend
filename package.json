@@ -5,6 +5,7 @@
   "license": "MIT",
   "scripts": {
     "build": "tsc",
+    "postinstall": "tsc",
     "dev": "ts-node-dev --inspect --respawn --transpile-only --ignore node_modules src/server.ts",
     "start": "node dist/server.js"
   },
