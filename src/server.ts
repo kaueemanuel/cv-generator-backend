@@ -1,6 +1,6 @@
 import express from 'express';
 import routes from './routes';
-import cors from 'cors';
+import * as cors from 'cors';
 
 const app = express();
 const originAux = ['*'];
@@ -22,7 +22,7 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-// app.options('*', cors(corsOptions));
+app.options('*', cors(corsOptions));
 app.use(express.json());
 app.use(routes);
 
