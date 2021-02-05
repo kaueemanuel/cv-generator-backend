@@ -3,8 +3,15 @@
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
+  "compilerOptions": {
+    "include": [
+      "src/**/*.ts"
+    ],
+    "exclude": [
+      "node_modules"
+    ]
+  },
   "scripts": {
-    "build": "tsc",
     "dev": "ts-node-dev --inspect --respawn --transpile-only --ignore node_modules src/server.ts",
     "start": "ts-node src/server.ts"
   },
