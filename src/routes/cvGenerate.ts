@@ -1,5 +1,5 @@
 import { Router } from 'express';
-const pdf = require('dynamic-html-pdf');
+const pdf: any = require('dynamic-html-pdf');
 import fs from 'fs';
 import path from 'path';
 
