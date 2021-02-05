@@ -39,13 +39,13 @@ routes.get('/', (request, response) => {
 
   pdf
     .create(document, options)
-    .then(res => {
+    .then((res: any) => {
       console.log(res);
       fs.writeFileSync(path.resolve('src', 'tmp', 'teste.pdf'), res, {
         encoding: 'utf-8',
       });
     })
-    .catch(error => {
+    .catch((error: any) => {
       console.error(error);
     });
 
