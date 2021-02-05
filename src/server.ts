@@ -1,13 +1,13 @@
 import express from 'express';
 import routes from './routes';
-import cors from 'cors';
 import dotenv from 'dotenv';
+const cors = require('cors');
 
 dotenv.config({
   path: './env/.env',
 });
 const app = express();
-const corsOptions: cors.CorsOptions = {
+const corsOptions = {
   origin: '*',
   methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
   preflightContinue: false,
@@ -15,7 +15,7 @@ const corsOptions: cors.CorsOptions = {
 };
 
 app.use(cors(corsOptions));
-// app.options('*', cors(corsOptions));
+app.options('*', cors(corsOptions));
 app.use(express.json());
 app.use(routes);
 
