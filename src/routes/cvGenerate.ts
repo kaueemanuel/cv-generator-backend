@@ -1,5 +1,5 @@
 import { Router } from 'express';
-const pdf: any = require('dynamic-html-pdf');
+const pdf = require('dynamic-html-pdf');
 import fs from 'fs';
 import path from 'path';
 
@@ -11,7 +11,7 @@ routes.get('/', (request, response) => {
   });
 
   // Custom handlebar helper
-  pdf.registerHelper('ifCond', function (v1, v2, options) {
+  pdf.registerHelper('ifCond', function (v1: any, v2: any, options: any) {
     if (v1 === v2) {
       return options.fn(this);
     }
