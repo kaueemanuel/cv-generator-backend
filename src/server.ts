@@ -5,7 +5,7 @@ import cors from 'cors';
 const app = express();
 const originAux = ['*'];
 const corsOptions = {
-  origin: (origin, callback) => {
+  origin: (origin: any, callback: any) => {
     if (
       !origin ||
       originAux.indexOf('*') !== -1 ||
