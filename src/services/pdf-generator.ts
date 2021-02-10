@@ -25,12 +25,6 @@ export interface IClusterData {
   data: IRenderData;
 }
 
-process.on('message', async (data: IRenderData) => {
-  const PDFGen = new PDFGenerator();
-  await PDFGen.main(data.values, data.cvName);
-  process.exit();
-});
-
 class PDFGenerator {
   constructor() {}
 
@@ -46,12 +40,13 @@ class PDFGenerator {
           page: page,
           data: data,
         };
-        await this.render(Values);
+        return await this.render(Values);
       });
       const renderData: IRenderData = { values: cvData, cvName };
-      await cluster.queue(renderData);
+      const result = await cluster.execute(renderData);
       await cluster.idle();
       await cluster.close();
+      return result;
     } catch (error) {
       console.log(error);
     }
@@ -82,9 +77,9 @@ class PDFGenerator {
         },
         printBackground: true,
       });
-      fs.writeFileSync(path.resolve('src', 'tmp', cvName), buffer, {
-        encoding: 'utf-8',
-      });
+      // fs.writeFileSync(path.resolve('src', 'tmp', cvName), buffer, {
+      //   encoding: 'utf-8',
+      // });
       return buffer;
     } catch (error) {
       console.log(error);
