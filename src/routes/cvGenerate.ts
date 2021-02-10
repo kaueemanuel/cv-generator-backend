@@ -1,59 +1,46 @@
-import { Router } from 'express';
-import pdf from 'dynamic-html-pdf';
-import fs from 'fs';
+import { Router, Response } from 'express';
+import PDFGeneratorClass, { IRenderData } from '../services/pdf-generator';
+import { fork } from 'child_process';
 import path from 'path';
-
+import { v1 } from 'uuid';
+import fs from 'fs';
+import UtilClass from '../helpers/util';
+const { sleep } = new UtilClass();
 const routes = Router();
 
-routes.get('/', (request, response) => {
-  const html = fs.readFileSync(path.resolve('src', 'templates', 'cv.html'), {
-    encoding: 'utf-8',
-  });
+const checkCreateCv = async (cvName: string, response: Response) => {
+  try {
+    const pathCv = path.resolve('src', 'tmp', cvName);
+    const data = fs.readFileSync(pathCv);
+    fs.unlinkSync(pathCv);
+    return response.send(data);
+  } catch (error) {
+    await sleep(100);
+    checkCreateCv(cvName, response);
+  }
+};
 
-  // Custom handlebar helper
-  pdf.registerHelper('ifCond', function (v1, v2, options) {
-    if (v1 === v2) {
-      return options.fn(this);
-    }
-    return options.inverse(this);
-  });
-  const options = {
-    format: 'A4',
-    orientation: 'portrait',
-    border: '10mm',
-  };
-
-  const user = {
-    name: 'Kauê',
-  };
-
-  const document = {
-    type: 'buffer', // 'file' or 'buffer'
-    template: html,
-    context: {
-      avatar: path.resolve('src', 'uploads', 'avatar.jpg'),
-      user,
-    },
-    path: './output.pdf', // it is not required if type is buffer
-  };
-
-  pdf
-    .create(document, options)
-    .then(res => {
-      console.log(res);
-      fs.writeFileSync(path.resolve('src', 'tmp', 'teste.pdf'), res, {
-        encoding: 'utf-8',
-      });
-    })
-    .catch(error => {
-      console.error(error);
-    });
-
+routes.get('/', async (request, response) => {
   response.json({ message: 'generate cv!' });
 });
-routes.post('/', (request, response) => {
-  const { cv } = request.body;
-  response.json({ cv });
+routes.post('/', async (request, response) => {
+  const data: IRenderData = request.body;
+  const childProcess = fork(
+    path.resolve('src', 'services', 'pdf-generator.ts'),
+  );
+  data.cvName = data.cvName + '-' + v1() + '.pdf';
+  response.setHeader('Content-type', 'application/octet-stream');
+  response.setHeader(
+    'Content-Disposition',
+    'attachment; filename=' + data.cvName,
+  );
+  childProcess.send(data);
+
+  return checkCreateCv(data.cvName, response);
+  // const finaly = true;
+  // while (finaly) {}
+
+  // await PDFGenerator.main(data, 'cv');
 });
 
 export default routes;
