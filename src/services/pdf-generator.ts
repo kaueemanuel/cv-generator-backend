@@ -31,7 +31,8 @@ class PDFGenerator {
   async main(cvData: ICVData, cvName: string) {
     try {
       const cluster = await Cluster.launch({
-        puppeteerOptions: { ignoreDefaultArgs: ['--no-sandbox'] },
+        //@ts-ignore
+        puppeteerOptions: { headless: true, args: ['--no-sandbox'] },
         concurrency: Cluster.CONCURRENCY_CONTEXT,
         maxConcurrency: 10,
       });

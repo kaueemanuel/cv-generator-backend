@@ -19,10 +19,7 @@ routes.post('/', async (request, response) => {
     'attachment; filename=' + data.cvName,
   );
   const buffer = await PDFGenerator.main(data.values, data.cvName);
-  console.log(buffer);
   response.send(buffer);
-  // const finaly = true;
-  // while (finaly) {}
 });
 
 export default routes;
