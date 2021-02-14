@@ -38,7 +38,7 @@
     .header .photo {
       width: 120px;
       height: 120px;
-      background-image: url('{{avatar}}');
+      background-image: url(<%=pessoalData.avatar%>);
       background-repeat: no-repeat;
       background-origin: center center;
       background-size: cover;
@@ -62,7 +62,7 @@
     <div class="header">
       <div class="info">
         <div class="title">
-          Kauê Emanuel Malheiros Brasil
+         <%=pessoalData.name%>
         </div>
         Rua Salgado Filho, n 207 - Vila Nova - Panambi</br>
         kaue.malheiros@gmail.com</br>
@@ -138,7 +138,6 @@ recorrendo a tecnologias Javascript, PHP, Java, HTML, CSS, SQL, NoSQL.
 recorrendo a tecnologias Javascript, PHP, Java, HTML, CSS, SQL, NoSQL.
       </div>
     </section>
-    <!-- <h1>{{user.name}}</h1> -->
     <p></p>
   </body>
 </html>

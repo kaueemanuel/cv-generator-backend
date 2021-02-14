@@ -1,8 +1,8 @@
-import { Cluster } from 'puppeteer-cluster';
 import puppeteer from 'puppeteer';
-import ejs, { render } from 'ejs';
+import ejs from 'ejs';
 import path from 'path';
 import fs from 'fs';
+const pdf = require('dynamic-html-pdf');
 
 export interface IPessoalData {
   name: string;
@@ -10,6 +10,7 @@ export interface IPessoalData {
   phone: string;
   email: string;
   linkedin?: string;
+  avatar?: string;
 }
 
 export interface ICVData {
@@ -17,7 +18,7 @@ export interface ICVData {
 }
 
 export interface IRenderData {
-  values: ICVData;
+  data: ICVData;
   cvName: string;
 }
 export interface IClusterData {
@@ -28,63 +29,39 @@ export interface IClusterData {
 class PDFGenerator {
   constructor() {}
 
-  async main(cvData: ICVData, cvName: string) {
+  async main(Values: IRenderData) {
     try {
-      const cluster = await Cluster.launch({
-        //@ts-ignore
-        puppeteerOptions: { headless: true, args: ['--no-sandbox'] },
-        concurrency: Cluster.CONCURRENCY_CONTEXT,
-        maxConcurrency: 10,
-      });
-
-      await cluster.task(async ({ page, data }) => {
-        const Values: IClusterData = {
-          page: page,
-          data: data,
-        };
-        return await this.render(Values);
-      });
-      const renderData: IRenderData = { values: cvData, cvName };
-      const result = await cluster.execute(renderData);
-      await cluster.idle();
-      await cluster.close();
-      return result;
+      return await this.render(Values);
     } catch (error) {
       console.log(error);
     }
   }
 
-  async render(Values: IClusterData) {
+  async render(Values: IRenderData) {
     try {
-      const cvName = Values.data.cvName.trim();
-      const values = Values.data.values;
-      const page = Values.page;
-
+      const cvName = Values.cvName.trim();
+      const data = Values.data;
       const html = await ejs.renderFile(
-        path.resolve('src', 'templates', `${cvName.split('-')[0]}.ejs`),
-        values,
+        path.resolve('src', 'templates', `${cvName}.ejs`),
+        data,
         { async: true },
       );
-      await page.setContent(html, {
-        waitUntil: 'networkidle0',
-      });
-      const margin = '11mm';
-      const buffer: Buffer = await page.pdf({
-        format: 'a4',
-        margin: {
-          bottom: margin,
-          left: margin,
-          right: margin,
-          top: margin,
-        },
-        printBackground: true,
-      });
-      // fs.writeFileSync(path.resolve('src', 'tmp', cvName), buffer, {
-      //   encoding: 'utf-8',
-      // });
-      return buffer;
+      let options = {
+        format: 'A4',
+        orientation: 'portrait',
+        border: '10mm',
+      };
+      let document = {
+        type: 'buffer', // 'file' or 'buffer'
+        template: html,
+        context: {},
+      };
+      const buffer = await pdf.create(document, options);
+      let arr = [];
+      arr.push(...buffer);
+      return arr;
     } catch (error) {
-      console.log(error);
+      throw {};
     }
   }
 }

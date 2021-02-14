@@ -1,6 +1,7 @@
 import express from 'express';
 import routes from './routes';
 import dotenv from 'dotenv';
+import bodyParser from 'body-parser';
 const cors = require('cors');
 
 dotenv.config({
@@ -13,7 +14,7 @@ const corsOptions = {
   preflightContinue: false,
   optionsSuccessStatus: 200, //some legacy browsers (IE11, various SmartTVs) choke on 204
 };
-
+app.use(bodyParser.json({ limit: '10mb' }));
 app.use(cors(corsOptions));
 app.options('*', cors(corsOptions));
 app.use(express.json());
