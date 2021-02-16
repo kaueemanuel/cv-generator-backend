@@ -56,10 +56,8 @@ class PDFGenerator {
         template: html,
         context: {},
       };
-      const buffer = await pdf.create(document, options);
-      let arr = [];
-      arr.push(...buffer);
-      return arr;
+      const buffer: Buffer = await pdf.create(document, options);
+      return buffer.toString('base64');
     } catch (error) {
       throw {};
     }

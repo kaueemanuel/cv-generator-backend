@@ -8,22 +8,10 @@ const routes = Router();
 import path from 'path';
 import multer from 'multer';
 
-var storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, 'tmp/');
-  },
-  filename: function (req, file, cb) {
-    cb(null, file.originalname); //Appending extension
-  },
-});
-const upload = multer({
-  storage: storage,
-});
-
 routes.get('/', async (request, response) => {
   response.json({ message: 'generate cv!' });
 });
-routes.post('/', upload.single('avatar'), async (request, response) => {
+routes.post('/', async (request, response) => {
   try {
     const dataToGenerate = request.body;
 
