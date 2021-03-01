@@ -2,11 +2,15 @@ import express from 'express';
 import routes from './routes';
 import dotenv from 'dotenv';
 import bodyParser from 'body-parser';
+import path from 'path';
 const cors = require('cors');
-
+import Mongoose from '../src/connections/mongodb';
 dotenv.config({
-  path: './env/.env',
+  path: path.resolve('src', 'env', '.env'),
 });
+
+Mongoose._init();
+
 const app = express();
 const corsOptions = {
   origin: '*',

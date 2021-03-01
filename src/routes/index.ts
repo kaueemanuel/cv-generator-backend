@@ -1,5 +1,6 @@
 import { Router } from 'express';
-import cvGenerator from './cvGenerate';
+import cvGenerator from './cv_generate';
+import usersRoute from './users';
 
 const routes = Router();
 
@@ -12,5 +13,6 @@ routes.post('/api', (request, response) => {
 });
 
 routes.use('/api/cv', cvGenerator);
+routes.use('/api/users', usersRoute);
 
 export default routes;

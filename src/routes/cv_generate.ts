@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import PDFGeneratorClass, { IRenderData } from '../services/pdf-generator';
+import PDFGeneratorClass, { IRenderData } from '../services/pdf_generator';
 import { v1 } from 'uuid';
 import fs from 'fs';
 import UtilClass from '../helpers/util';
