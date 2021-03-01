@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 import bodyParser from 'body-parser';
 import path from 'path';
 const cors = require('cors');
-import Mongoose from '../src/connections/mongodb';
+import Mongoose from './connections/mongodb';
 dotenv.config({
   path: path.resolve('src', 'env', '.env'),
 });
