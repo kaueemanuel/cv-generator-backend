@@ -1,7 +1,6 @@
 import express from 'express';
 import routes from './routes';
 import dotenv from 'dotenv';
-import bodyParser from 'body-parser';
 import path from 'path';
 const cors = require('cors');
 import Mongoose from './connections/mongodb';
@@ -18,7 +17,8 @@ const corsOptions = {
   preflightContinue: false,
   optionsSuccessStatus: 200, //some legacy browsers (IE11, various SmartTVs) choke on 204
 };
-app.use(bodyParser.json({ limit: '10mb' }));
+app.use(express.urlencoded());
+app.use(express.json({ limit: '10mb' }));
 app.use(cors(corsOptions));
 app.options('*', cors(corsOptions));
 app.use(express.json());
